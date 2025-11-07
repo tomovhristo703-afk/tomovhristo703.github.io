@@ -27,6 +27,16 @@
             font-size: 1.5em;
             color: #fffacd;
         }
+        nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #800000;
+            font-weight: bold;
+        }
         main {
             max-width: 900px;
             margin: 40px auto;
@@ -43,26 +53,23 @@
 </head>
 <body>
 
-    <header>
-        <h1>Hristo Tomov</h1>
-        <h2>Independent news commentary</h2>
-    </header>
+<header>
+    <h1>Hristo Tomov</h1>
+    <h2>Independent news commentary</h2>
+</header>
 
-    <main>
-        <div class="posts-box">
-            <!-- Embedded timeline -->
-            <a class="twitter-timeline"
-               href="https://twitter.com/realHristoTomov"
-               data-theme="light"
-               data-chrome="nofooter noborders"
-               data-height="500"
-               data-tweet-limit="10">
-               Tweets by @realHristoTomov
-            </a>
-        </div>
-    </main>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="news.html">News</a>
+</nav>
 
-    <!-- X embed script -->
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<main>
+    <div class="posts-box">
+        <!-- Elfsight Twitter Feed -->
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div class="elfsight-app-8a3f88cd-3ece-4284-9f89-ecfa25e8390d" data-elfsight-app-lazy></div>
+    </div>
+</main>
+
 </body>
 </html>
