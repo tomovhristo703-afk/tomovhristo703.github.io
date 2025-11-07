@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hristo Tomov</title>
+    <style>
+        /* General styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff8f0;
+            color: #800000; /* Dark red text */
+        }
+
+        header {
+            background-color: #b8860b; /* Gold background */
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3em;
+            color: #ff0000; /* Bright red title */
+        }
+
+        header h2 {
+            margin: 10px 0 0;
+            font-size: 1.5em;
+            color: #fffacd; /* Light gold subtitle */
+        }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Box for posts */
+        .posts-box {
+            border: 2px solid #b8860b; /* gold border */
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 500px;
+            background-color: #fff0e0;
+        }
+
+        /* Optional: center loading text */
+        .loading-text {
+            text-align: center;
+            color: #800000;
+            font-style: italic;
+            font-size: 1.2em;
+            padding: 50px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hristo Tomov</h1>
+        <h2>Independent news commentary</h2>
+    </header>
+
+    <main>
+        <div class="posts-box">
+            <a class="twitter-timeline" 
+               href="https://twitter.com/realHristoTomov?ref_src=twsrc%5Etfw" 
+               data-chrome="nofooter noborders" 
+               data-tweet-limit="10" 
+               data-theme="light" 
+               data-show-replies="false">
+               Loading tweets...
+            </a>
+        </div>
+    </main>
+
+    <!-- X/Twitter embed script -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</body>
+</html>
