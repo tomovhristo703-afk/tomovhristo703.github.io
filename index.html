@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #0b1e3c, #ffffff); /* deep blue fading to white */
+      background: linear-gradient(to bottom, #0b1e3c, #ffffff);
       font-family: 'Playfair Display', serif;
       color: #222;
     }
@@ -16,11 +16,11 @@
     .container {
       max-width: 700px;
       margin: 50px auto;
-      background: #fffaf0; /* cream-white background */
+      background: #fffaf0;
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
       padding: 40px;
-      border: 4px solid gold; /* gold border for luxury */
+      border: 4px solid gold;
     }
 
     h1 {
@@ -50,38 +50,33 @@
     .message {
       font-size: 1.2em;
       line-height: 1.5em;
-      color: #0b1e3c; /* deep blue text */
+      color: #0b1e3c;
     }
 
-    /* Accent colors for hover effect */
     .post:hover {
-      background: #fff0f5; /* subtle luxury pinkish highlight */
+      background: #fff0f5;
       transition: 0.3s;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>From the Desk of Hristo</h1>
+    <h1>From the Desk of Hristo Tomov</h1>
     <div id="feed"></div>
   </div>
 
   <script>
-    // Add your posts here: newest first
-    const posts = [
-      { date: "November 8, 2025", message: "Excited to launch my luxurious new site today!" },
-      { date: "November 7, 2025", message: "Working on something big. Stay tuned." },
-      { date: "November 6, 2025", message: "Testing the elegant desk feed system." }
-    ];
-
-    const feed = document.getElementById("feed");
-
-    posts.forEach(post => {
-      const postDiv = document.createElement("div");
-      postDiv.className = "post";
-      postDiv.innerHTML = `<div class="date">${post.date}</div><div class="message">${post.message}</div>`;
-      feed.appendChild(postDiv);
-    });
+    fetch('posts.json')
+      .then(res => res.json())
+      .then(posts => {
+        const feed = document.getElementById("feed");
+        posts.forEach(post => {
+          const div = document.createElement("div");
+          div.className = "post";
+          div.innerHTML = `<div class="date">${post.date}</div><div class="message">${post.message}</div>`;
+          feed.appendChild(div);
+        });
+      });
   </script>
 </body>
 </html>
