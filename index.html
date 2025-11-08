@@ -27,13 +27,33 @@
       text-align: center;
       color: darkred;
       font-size: 3em;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
 
     .post {
       border-bottom: 1px solid #ddd;
       padding: 20px 0;
+      transition: background 0.3s;
     }
 
     .post:last-child {
@@ -55,13 +75,20 @@
 
     .post:hover {
       background: #fff0f5;
-      transition: 0.3s;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>From the Desk of Hristo Tomov</h1>
+
+    <div class="video-wrapper">
+      <iframe src="https://player.viloud.tv/embed/channel/1f12b78024bab7b30ae7de5275f01b67?autoplay=0&volume=1&controls=0&title=1&share=1&open_playlist=0&random=0"
+        allow="autoplay"
+        allowfullscreen>
+      </iframe>
+    </div>
+
     <div id="feed"></div>
   </div>
 
@@ -76,6 +103,9 @@
           div.innerHTML = `<div class="date">${post.date}</div><div class="message">${post.message}</div>`;
           feed.appendChild(div);
         });
+      })
+      .catch(() => {
+        document.getElementById("feed").innerHTML = "<p>Could not load posts.</p>";
       });
   </script>
 </body>
