@@ -1,75 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hristo Tomov</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #fff8f0;
-            color: #800000;
-        }
-        header {
-            background-color: #b8860b;
-            color: white;
-            text-align: center;
-            padding: 50px 20px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 3em;
-            color: #ff0000;
-        }
-        header h2 {
-            margin: 10px 0 0;
-            font-size: 1.5em;
-            color: #fffacd;
-        }
-        nav {
-            text-align: center;
-            margin: 20px 0;
-        }
-        nav a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: #800000;
-            font-weight: bold;
-        }
-        main {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .posts-box {
-            border: 2px solid #b8860b;
-            border-radius: 10px;
-            padding: 20px;
-            min-height: 500px;
-            background-color: #fff0e0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>From the Desk of Hristo Tomov</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0b1e3c, #ffffff); /* deep blue fading to white */
+      font-family: 'Playfair Display', serif;
+      color: #222;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #fffaf0; /* cream-white background */
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      padding: 40px;
+      border: 4px solid gold; /* gold border for luxury */
+    }
+
+    h1 {
+      text-align: center;
+      color: darkred;
+      font-size: 3em;
+      margin-bottom: 40px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .post {
+      border-bottom: 1px solid #ddd;
+      padding: 20px 0;
+    }
+
+    .post:last-child {
+      border-bottom: none;
+    }
+
+    .date {
+      color: #555;
+      font-size: 0.9em;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .message {
+      font-size: 1.2em;
+      line-height: 1.5em;
+      color: #0b1e3c; /* deep blue text */
+    }
+
+    /* Accent colors for hover effect */
+    .post:hover {
+      background: #fff0f5; /* subtle luxury pinkish highlight */
+      transition: 0.3s;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>From the Desk of Hristo</h1>
+    <div id="feed"></div>
+  </div>
 
-<header>
-    <h1>Hristo Tomov</h1>
-    <h2>Independent news commentary</h2>
-</header>
+  <script>
+    // Add your posts here: newest first
+    const posts = [
+      { date: "November 8, 2025", message: "Excited to launch my luxurious new site today!" },
+      { date: "November 7, 2025", message: "Working on something big. Stay tuned." },
+      { date: "November 6, 2025", message: "Testing the elegant desk feed system." }
+    ];
 
-<nav>
-    <a href="index.html">Home</a>
-    <a href="news.html">News</a>
-</nav>
+    const feed = document.getElementById("feed");
 
-<main>
-    <div class="posts-box">
-        <!-- Elfsight Twitter Feed -->
-        <script src="https://elfsightcdn.com/platform.js" async></script>
-        <div class="elfsight-app-8a3f88cd-3ece-4284-9f89-ecfa25e8390d" data-elfsight-app-lazy></div>
-    </div>
-</main>
-
+    posts.forEach(post => {
+      const postDiv = document.createElement("div");
+      postDiv.className = "post";
+      postDiv.innerHTML = `<div class="date">${post.date}</div><div class="message">${post.message}</div>`;
+      feed.appendChild(postDiv);
+    });
+  </script>
 </body>
 </html>
