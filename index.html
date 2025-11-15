@@ -1,232 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>From the Desk of Hristo Tomov</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(to bottom, #0b1e3c, #ffffff);
-  font-family: 'Playfair Display', serif;
-  color: #222;
-}
-.container {
-  max-width: 700px;
-  margin: 20px auto;
-  background: #fffaf0;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  padding: 20px;
-  border: 4px solid gold;
-  min-height: 100vh;
-}
-h1 {
-  text-align: center;
-  color: darkred;
-  font-size: 3em;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-}
-#login-container, #new-post-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
-#login-container input, #new-post-container input {
-  width: 90%;
-  max-width: 400px;
-  padding: 10px;
-  border-radius: 15px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-#login-container button, #new-post-container button {
-  padding: 8px 16px;
-  border-radius: 15px;
-  border: none;
-  background: darkred;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-#login-container button:hover, #new-post-container button:hover {
-  background: crimson;
-}
-#current-user {
-  margin-top: 5px;
-  font-size: 0.9em;
-  color: #555;
-}
-/* Post card like original design but animated */
-.post {
-  background: #fffaf0;
-  border-radius: 15px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  word-wrap: break-word;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.post.loaded { opacity:1; transform: translateY(0); }
-.post:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.post .author { font-weight: bold; color: darkred; margin-bottom: 5px; }
-.post .date { font-size: 0.8em; color: #555; margin-bottom: 10px; }
-.post .message { font-size: 1.1em; margin-bottom: 10px; color: #0b1e3c; }
-.actions {
-  display: flex;
-  justify-content: flex-start;
-  font-weight: bold;
-  font-size: 0.95em;
-  color: darkred;
-  margin-bottom: 10px;
-}
-.actions button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: darkred;
-  font-weight: bold;
-  margin-right: 15px;
-}
-.actions button:hover { text-decoration: underline; }
-.comments { margin-top: 10px; font-size: 0.9em; }
-.comments div { border-top: 1px solid #ddd; padding: 5px 0; color: #0b1e3c; }
-.comment-input { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
-.comment-input input { flex: 1; padding: 8px; border-radius: 15px; border: 1px solid #ccc; min-width: 60%; }
-.comment-input button { padding: 8px 12px; border-radius: 15px; border: none; background: darkred; color: white; cursor: pointer; }
-.comment-input button:hover { background: crimson; }
-@media only screen and (max-width: 600px) {
-  .container { margin: 10px; padding: 15px; border-width: 3px; }
-  h1 { font-size: 2em; margin-bottom: 20px; }
-  #login-container input, #new-post-container input { width: 95%; }
-  .comment-input input, .comment-input button { width: 100%; }
-  .actions { flex-wrap: wrap; gap: 10px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From the Desk of Hristo Tomov</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1e3c">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0b1e3c, #ffffff);
+      font-family: 'Playfair Display', serif;
+      color: #222;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      background: #fffaf0;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      padding: 20px;
+      border: 4px solid gold;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: darkred;
+      font-size: 3em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    #login-container, #new-post-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #login-container input, #new-post-container input {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    #login-container button, #new-post-container button {
+      padding: 8px 16px;
+      border-radius: 15px;
+      border: none;
+      background: darkred;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #login-container button:hover, #new-post-container button:hover {
+      background: crimson;
+    }
+
+    #current-user {
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    /* Post card like Twitter */
+    .post {
+      background: #fff;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      word-wrap: break-word;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    /* Hover / swipe effect */
+    .post:hover {
+      transform: translateY(-5px) rotate(-0.2deg);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .post .author {
+      font-weight: bold;
+      color: darkred;
+      margin-bottom: 3px;
+    }
+
+    .post .date {
+      font-size: 0.8em;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .post .message {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      color: #0b1e3c;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      font-weight: bold;
+      font-size: 0.9em;
+      color: darkred;
+      margin-bottom: 10px;
+    }
+
+    .actions button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: darkred;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .actions button:hover {
+      text-decoration: underline;
+    }
+
+    .actions img {
+      width: 18px;
+      height: 18px;
+    }
+
+    .comments {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
+    .comments div {
+      border-top: 1px solid #ddd;
+      padding: 5px 0;
+      color: #0b1e3c;
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 5px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .comment-input input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      min-width: 60%;
+    }
+
+    .comment-input button {
+      padding: 8px 12px;
+      border-radius: 15px;
+      border: none;
+      background: darkred;
+      color: white;
+      cursor: pointer;
+    }
+
+    .comment-input button:hover {
+      background: crimson;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+        border-width: 3px;
+      }
+
+      h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+
+      #login-container input, #new-post-container input {
+        width: 95%;
+      }
+
+      .comment-input input, .comment-input button {
+        width: 100%;
+      }
+
+      .actions {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<h1>From the Desk of Hristo Tomov</h1>
+  <div class="container">
+    <h1>From the Desk of Hristo Tomov</h1>
 
-<div id="login-container">
-  <input type="text" id="username" placeholder="Enter your username">
-  <input type="password" id="password" placeholder="Enter your password">
-  <button onclick="login()">Login</button>
-  <p id="current-user"></p>
-</div>
-
-<div id="new-post-container" style="display:none">
-  <input type="text" id="new-post-input" placeholder="Write a new post">
-  <button onclick="createPost()">Post</button>
-</div>
-
-<div id="feed"></div>
-</div>
-
-<script>
-const adminUsername = "realHristoTomov";
-const adminPassword = "i23c45o67";
-let currentUser = '';
-let likes = [];
-let comments = [];
-
-// Load saved likes/comments
-function loadData(){
-  const savedLikes = JSON.parse(localStorage.getItem('likes'));
-  const savedComments = JSON.parse(localStorage.getItem('comments'));
-  if(savedLikes) likes = savedLikes;
-  if(savedComments) comments = savedComments;
-}
-function saveData(){
-  localStorage.setItem('likes', JSON.stringify(likes));
-  localStorage.setItem('comments', JSON.stringify(comments));
-}
-
-function login(){
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-  if(username==='' || password==='') return alert('Enter username and password');
-  if(username===adminUsername && password===adminPassword){
-    currentUser=adminUsername;
-    document.getElementById('current-user').innerText = `Logged in as ${currentUser} (Admin)`;
-    document.getElementById('new-post-container').style.display='flex';
-  } else {
-    currentUser=username;
-    document.getElementById('current-user').innerText = `Logged in as ${currentUser}`;
-    document.getElementById('new-post-container').style.display='none';
-  }
-  document.getElementById('username').value='';
-  document.getElementById('password').value='';
-}
-
-function addPostToFeed(message,index){
-  const feed=document.getElementById('feed');
-  const div=document.createElement('div');
-  div.className='post';
-  const date=new Date().toLocaleString();
-  div.innerHTML=`
-    <div class="author">${adminUsername}</div>
-    <div class="date">${date}</div>
-    <div class="message">${message}</div>
-    <div class="actions">
-      <button onclick="addComment(${index})">✏️ Comment</button>
-      <button onclick="sharePost(${index})">🔁 Repost</button>
-      <button onclick="likePost(${index})">❤️ Like (<span id="likes-${index}">0</span>)</button>
+    <!-- Login -->
+    <div id="login-container">
+      <input type="text" id="username" placeholder="Enter your username">
+      <input type="password" id="password" placeholder="Enter your password">
+      <button onclick="login()">Login</button>
+      <p id="current-user"></p>
     </div>
-    <div class="comments" id="comments-${index}"></div>
-    <div class="comment-input">
-      <input type="text" id="comment-input-${index}" placeholder="Add a comment">
-      <button onclick="addComment(${index})">✏️ Comment</button>
+
+    <!-- New Post (Admin Only) -->
+    <div id="new-post-container" style="display:none">
+      <input type="text" id="new-post-input" placeholder="Write a new post">
+      <button onclick="createPost()">Post</button>
     </div>
-  `;
-  feed.prepend(div);
-  setTimeout(()=>div.classList.add('loaded'),50);
 
-  if(likes[index]) document.getElementById(`likes-${index}`).innerText=likes[index];
-  if(comments[index]) document.getElementById(`comments-${index}`).innerHTML=comments[index].map(c=>`<div>${c}</div>`).join('');
-}
+    <!-- Posts Feed -->
+    <div id="feed"></div>
+  </div>
 
-function createPost(){
-  if(currentUser!==adminUsername) return;
-  const input=document.getElementById('new-post-input');
-  const text=input.value.trim();
-  if(text==='') return;
-  const index=document.getElementById('feed').children.length;
-  addPostToFeed(text,index);
-  input.value='';
-}
+  <script>
+    const adminUsername = "realHristoTomov";
+    const adminPassword = "i23c45o67";
+    let currentUser = '';
+    const likes = [];
+    const comments = [];
 
-function likePost(index){
-  if(!likes[index]) likes[index]=0;
-  likes[index]++;
-  document.getElementById(`likes-${index}`).innerText=likes[index];
-  saveData();
-}
+    function login() {
+      const usernameInput = document.getElementById('username').value.trim();
+      const passwordInput = document.getElementById('password').value.trim();
 
-function addComment(index){
-  if(!currentUser) return alert('Login first');
-  const input=document.getElementById(`comment-input-${index}`);
-  const text=input.value.trim();
-  if(text==='') return;
-  if(!comments[index]) comments[index]=[];
-  comments[index].push(`${currentUser}: ${text}`);
-  document.getElementById(`comments-${index}`).innerHTML=comments[index].map(c=>`<div>${c}</div>`).join('');
-  input.value='';
-  saveData();
-}
+      if(usernameInput === '' || passwordInput === '') {
+        alert('Please enter both username and password.');
+        return;
+      }
 
-function sharePost(index){
-  alert("Share link copied! (simulation)");
-}
+      if(usernameInput === adminUsername && passwordInput === adminPassword) {
+        currentUser = adminUsername;
+        document.getElementById('current-user').innerText = `Logged in as: ${currentUser} (Admin)`;
+        document.getElementById('new-post-container').style.display = 'flex';
+      } else {
+        currentUser = usernameInput;
+        document.getElementById('current-user').innerText = `Logged in as: ${currentUser}`;
+        document.getElementById('new-post-container').style.display = 'none';
+      }
 
-loadData();
-</script>
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    // Load posts.json
+    fetch('posts.json')
+      .then(res => res.json())
+      .then(posts => {
+        const feed = document.getElementById("feed");
+        posts.reverse();
+        posts.forEach((post, index) => addPostToFeed(post.date, post.message, index, feed));
+      })
+      .catch(() => {
+        document.getElementById("feed").innerHTML = "<p>Could not load posts.</p>";
+      });
+
+    function addPostToFeed(date, message, index, feed) {
+      const div = document.createElement("div");
+      div.className = "post";
+      div.innerHTML = `
+        <div class="author">${adminUsername}</div>
+        <div class="date">${date}</div>
+        <div class="message">${message}</div>
+        <div class="actions">
+          <button onclick="addComment(${index})">
+            <img src="comment-icon.png" alt="Comment"> Comment
+          </button>
+          <button onclick="sharePost(${index})">
+            <img src="repost-icon.png" alt="Repost"> Repost
+          </button>
+          <button onclick="likePost(${index})">
+            <img src="like-icon.png" alt="Like"> Like (<span id="likes-${index}">0</span>)
+          </button>
+        </div>
+        <div class="comments" id="comments-${index}"></div>
+        <div class="comment-input">
+          <input type="text" id="comment-input-${index}" placeholder="Add a comment">
+          <button onclick="addComment(${index})">Comment</button>
+        </div>
+      `;
+      feed.prepend(div);
+    }
+
+    function createPost() {
+      if(currentUser !== adminUsername) return;
+      const input = document.getElementById('new-post-input');
+      const text = input.value.trim();
+      if(text === '') return;
+
+      const feed = document.getElementById('feed');
+      const index = feed.children.length;
+      const today = new Date();
+      const dateStr = today.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' });
+
+      addPostToFeed(dateStr, text, index, feed);
+      input.value = '';
+    }
+
+    function likePost(index) {
+      if(!likes[index]) likes[index] = 0;
+      likes[index]++;
+      document.getElementById(`likes-${index}`).innerText = likes[index];
+    }
+
+    function addComment(index) {
+      if(!currentUser) {
+        alert('Please login first!');
+        return;
+      }
+      const input = document.getElementById(`comment-input-${index}`);
+      const text = input.value.trim();
+      if(text === '') return;
+      if(!comments[index]) comments[index] = [];
+      comments[index].push(`${currentUser}: ${text}`);
+
+      const commentsDiv = document.getElementById(`comments-${index}`);
+      commentsDiv.innerHTML = comments[index].map(c => `<div>${c}</div>`).join('');
+      input.value = '';
+    }
+
+    function sharePost(index) {
+      alert("Share link copied! (simulation)");
+    }
+
+    // PWA
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('sw.js')
+        .then(()=>console.log('Service Worker registered'))
+        .catch(err=>console.log('Service Worker failed', err));
+    }
+
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e)=>{
+      e.preventDefault();
+      deferredPrompt=e;
+      const installBtn=document.createElement('button');
+      installBtn.innerText="Install App";
+      installBtn.style.position="fixed";
+      installBtn.style.bottom="20px";
+      installBtn.style.right="20px";
+      installBtn.style.background="darkred";
+      installBtn.style.color="white";
+      installBtn.style.border="none";
+      installBtn.style.padding="10px 15px";
+      installBtn.style.borderRadius="20px";
+      installBtn.style.cursor="pointer";
+      installBtn.onclick=()=>{
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choice=>{
+          deferredPrompt=null;
+          installBtn.remove();
+        });
+      };
+      document.body.appendChild(installBtn);
+    });
+
+    // Press Enter to submit login
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if(e.key === 'Enter') login();
+    });
+    // Press Enter to submit post
+    document.getElementById('new-post-input').addEventListener('keypress', function(e) {
+      if(e.key === 'Enter') createPost();
+    });
+  </script>
 </body>
 </html>
