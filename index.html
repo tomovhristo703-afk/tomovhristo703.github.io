@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b1e3c">
   <meta charset="UTF-8">
   <title>From the Desk of Hristo Tomov</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1e3c">
   <style>
     body {
       margin: 0;
@@ -139,6 +139,52 @@
     .comment-input button:hover {
       background: crimson;
     }
+
+    /* Mobile Styles */
+    @media only screen and (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+        border-width: 2px;
+      }
+
+      h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+
+      .message {
+        font-size: 1em;
+      }
+
+      .actions button {
+        padding: 4px 8px;
+        margin-bottom: 5px;
+      }
+
+      #login-container input {
+        width: 60%;
+        font-size: 0.9em;
+      }
+
+      #login-container button {
+        font-size: 0.9em;
+        padding: 4px 8px;
+      }
+
+      .comment-input {
+        flex-direction: column;
+      }
+
+      .comment-input input {
+        margin-bottom: 5px;
+      }
+
+      .comment-input button {
+        margin-left: 0;
+        padding: 4px 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -155,8 +201,8 @@
   </div>
 
   <script>
+    // -------------------- Login --------------------
     let currentUser = '';
-    
     function login() {
       const usernameInput = document.getElementById('username');
       if(usernameInput.value.trim() !== '') {
@@ -166,6 +212,7 @@
       }
     }
 
+    // -------------------- Fetch posts --------------------
     fetch('posts.json')
       .then(res => res.json())
       .then(posts => {
@@ -216,13 +263,39 @@
       commentsDiv.innerHTML = comments[index].map(c => `<div>${c}</div>`).join('');
       input.value = '';
     }
+
+    // -------------------- PWA Service Worker --------------------
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.log('Service Worker failed', err));
+    }
+
+    // Optional: Install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.createElement('button');
+      installBtn.innerText = "Install App";
+      installBtn.style.position = "fixed";
+      installBtn.style.bottom = "20px";
+      installBtn.style.right = "20px";
+      installBtn.style.background = "darkred";
+      installBtn.style.color = "white";
+      installBtn.style.border = "none";
+      installBtn.style.padding = "10px 15px";
+      installBtn.style.borderRadius = "10px";
+      installBtn.style.cursor = "pointer";
+      installBtn.onclick = () => {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choice => {
+          deferredPrompt = null;
+          installBtn.remove();
+        });
+      };
+      document.body.appendChild(installBtn);
+    });
   </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('Service Worker registered'))
-      .catch(err => console.log('Service Worker failed', err));
-  }
-</script>
 </body>
 </html>
