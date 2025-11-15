@@ -268,11 +268,12 @@
       }
     }
 
-    // Fetch posts.json
+    // Fetch posts.json and show newest first
     fetch('posts.json')
       .then(res => res.json())
       .then(posts => {
         const feed = document.getElementById("feed");
+        posts.reverse(); // newest posts first
         posts.forEach((post, index) => {
           addPostToFeed(post.date, post.message, index, feed);
         });
@@ -296,7 +297,7 @@
           <button onclick="addComment(${index})">Comment</button>
         </div>
       `;
-      feed.prepend(div); // new posts appear at the top
+      feed.prepend(div); // always add new post at top
     }
 
     // Admin creates post
