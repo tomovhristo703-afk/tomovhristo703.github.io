@@ -59,11 +59,12 @@
       color: white;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.1s;
     }
 
     #login-container button:hover, #new-post-container button:hover {
       background: crimson;
+      transform: scale(1.05);
     }
 
     #current-user {
@@ -80,19 +81,25 @@
       margin-bottom: 15px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       word-wrap: break-word;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     }
 
     /* Hover / swipe effect */
     .post:hover {
       transform: translateY(-5px) rotate(-0.2deg);
       box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      background: #fff0e0;
     }
 
     .post .author {
       font-weight: bold;
       color: darkred;
       margin-bottom: 3px;
+      transition: color 0.3s;
+    }
+
+    .post .author:hover {
+      color: crimson;
     }
 
     .post .date {
@@ -105,6 +112,11 @@
       font-size: 1.1em;
       margin-bottom: 10px;
       color: #0b1e3c;
+      transition: transform 0.2s;
+    }
+
+    .post .message:hover {
+      transform: scale(1.02);
     }
 
     .actions {
@@ -122,18 +134,12 @@
       cursor: pointer;
       color: darkred;
       font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      transition: color 0.2s, transform 0.1s;
     }
 
     .actions button:hover {
-      text-decoration: underline;
-    }
-
-    .actions img {
-      width: 18px;
-      height: 18px;
+      color: crimson;
+      transform: scale(1.1);
     }
 
     .comments {
@@ -145,6 +151,11 @@
       border-top: 1px solid #ddd;
       padding: 5px 0;
       color: #0b1e3c;
+      transition: background 0.2s;
+    }
+
+    .comments div:hover {
+      background: #fff0e0;
     }
 
     .comment-input {
@@ -169,10 +180,12 @@
       background: darkred;
       color: white;
       cursor: pointer;
+      transition: background 0.3s, transform 0.1s;
     }
 
     .comment-input button:hover {
       background: crimson;
+      transform: scale(1.05);
     }
 
     @media only screen and (max-width: 600px) {
@@ -274,15 +287,9 @@
         <div class="date">${date}</div>
         <div class="message">${message}</div>
         <div class="actions">
-          <button onclick="addComment(${index})">
-            <img src="comment-icon.png" alt="Comment"> Comment
-          </button>
-          <button onclick="sharePost(${index})">
-            <img src="repost-icon.png" alt="Repost"> Repost
-          </button>
-          <button onclick="likePost(${index})">
-            <img src="like-icon.png" alt="Like"> Like (<span id="likes-${index}">0</span>)
-          </button>
+          <button onclick="addComment(${index})">State</button>
+          <button onclick="sharePost(${index})">Restate</button>
+          <button onclick="likePost(${index})">Markup (<span id="likes-${index}">0</span>)</button>
         </div>
         <div class="comments" id="comments-${index}"></div>
         <div class="comment-input">
