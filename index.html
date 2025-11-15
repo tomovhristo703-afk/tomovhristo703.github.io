@@ -172,7 +172,7 @@
     /* Mobile Styles */
     @media only screen and (max-width: 600px) {
       .container {
-        margin: 20px;
+        margin: 10px;
         padding: 20px;
         border-width: 2px;
       }
@@ -187,18 +187,21 @@
       }
 
       .actions button {
-        padding: 4px 8px;
+        padding: 6px 12px;
         margin-bottom: 5px;
+        width: 48%;
       }
 
       #login-container input, #new-post-container input {
-        width: 60%;
-        font-size: 0.9em;
+        width: 100%;
+        font-size: 1em;
       }
 
       #login-container button, #new-post-container button {
-        font-size: 0.9em;
-        padding: 4px 8px;
+        width: 100%;
+        font-size: 1em;
+        padding: 8px;
+        margin-top: 5px;
       }
 
       .comment-input {
@@ -207,11 +210,13 @@
 
       .comment-input input {
         margin-bottom: 5px;
+        width: 100%;
       }
 
       .comment-input button {
         margin-left: 0;
-        padding: 4px 8px;
+        width: 100%;
+        padding: 8px;
       }
     }
   </style>
@@ -238,7 +243,7 @@
   </div>
 
   <script>
-    const adminUsername = "HristoAdmin"; // Only this username can create posts
+    const adminUsername = "realHristoTomov"; // Only this user can post
     let currentUser = '';
     const likes = [];
     const comments = [];
@@ -250,13 +255,8 @@
         currentUser = usernameInput.value.trim();
         document.getElementById('current-user').innerText = `Logged in as: ${currentUser}`;
         usernameInput.value = '';
-
-        // Show new post only for admin
-        if(currentUser === adminUsername) {
-          document.getElementById('new-post-container').style.display = 'block';
-        } else {
-          document.getElementById('new-post-container').style.display = 'none';
-        }
+        document.getElementById('new-post-container').style.display =
+          (currentUser === adminUsername) ? 'block' : 'none';
       }
     }
 
@@ -273,7 +273,6 @@
         document.getElementById("feed").innerHTML = "<p>Could not load posts.</p>";
       });
 
-    // Add post dynamically
     function addPostToFeed(date, message, index, feed) {
       const div = document.createElement("div");
       div.className = "post";
@@ -292,7 +291,7 @@
       feed.appendChild(div);
     }
 
-    // Admin creates new post
+    // Admin creates post
     function createPost() {
       if(currentUser !== adminUsername) return;
       const input = document.getElementById('new-post-input');
@@ -332,33 +331,33 @@
       input.value = '';
     }
 
-    // -------------------- PWA Service Worker --------------------
-    if ('serviceWorker' in navigator) {
+    // PWA service worker
+    if('serviceWorker' in navigator){
       navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('Service Worker registered'))
-        .catch(err => console.log('Service Worker failed', err));
+        .then(()=>console.log('Service Worker registered'))
+        .catch(err=>console.log('Service Worker failed', err));
     }
 
-    // Optional install prompt
+    // Install prompt
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener('beforeinstallprompt', (e)=>{
       e.preventDefault();
-      deferredPrompt = e;
-      const installBtn = document.createElement('button');
-      installBtn.innerText = "Install App";
-      installBtn.style.position = "fixed";
-      installBtn.style.bottom = "20px";
-      installBtn.style.right = "20px";
-      installBtn.style.background = "darkred";
-      installBtn.style.color = "white";
-      installBtn.style.border = "none";
-      installBtn.style.padding = "10px 15px";
-      installBtn.style.borderRadius = "10px";
-      installBtn.style.cursor = "pointer";
-      installBtn.onclick = () => {
+      deferredPrompt=e;
+      const installBtn=document.createElement('button');
+      installBtn.innerText="Install App";
+      installBtn.style.position="fixed";
+      installBtn.style.bottom="20px";
+      installBtn.style.right="20px";
+      installBtn.style.background="darkred";
+      installBtn.style.color="white";
+      installBtn.style.border="none";
+      installBtn.style.padding="10px 15px";
+      installBtn.style.borderRadius="10px";
+      installBtn.style.cursor="pointer";
+      installBtn.onclick=()=>{
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choice => {
-          deferredPrompt = null;
+        deferredPrompt.userChoice.then(choice=>{
+          deferredPrompt=null;
           installBtn.remove();
         });
       };
