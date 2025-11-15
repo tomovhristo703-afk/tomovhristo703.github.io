@@ -54,6 +54,7 @@
       font-size: 1.2em;
       line-height: 1.5em;
       color: #0b1e3c;
+      word-wrap: break-word;
     }
 
     .post:hover {
@@ -87,6 +88,7 @@
       padding: 5px 0;
       font-size: 0.95em;
       color: #222;
+      word-wrap: break-word;
     }
 
     #login-container {
@@ -97,6 +99,8 @@
     #login-container input {
       padding: 5px;
       font-size: 1em;
+      width: 50%;
+      max-width: 250px;
     }
 
     #login-container button {
@@ -107,6 +111,7 @@
       background: darkred;
       color: white;
       cursor: pointer;
+      margin-left: 5px;
     }
 
     #login-container button:hover {
@@ -125,6 +130,7 @@
       font-size: 1em;
       border-radius: 5px;
       border: 1px solid #ccc;
+      max-width: 400px;
     }
 
     #new-post-container button {
@@ -145,6 +151,7 @@
     .comment-input {
       margin-top: 10px;
       display: flex;
+      flex-wrap: wrap;
     }
 
     .comment-input input {
@@ -153,16 +160,20 @@
       font-size: 1em;
       border-radius: 5px;
       border: 1px solid #ccc;
+      min-width: 60%;
+      margin-bottom: 5px;
     }
 
     .comment-input button {
-      margin-left: 5px;
       padding: 5px 10px;
       background: darkred;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-left: 5px;
+      margin-bottom: 5px;
+      min-width: 30%;
     }
 
     .comment-input button:hover {
@@ -186,37 +197,34 @@
         font-size: 1em;
       }
 
+      #login-container input {
+        width: 80%;
+        max-width: none;
+      }
+
+      #new-post-container input {
+        width: 80%;
+      }
+
+      #login-container button, #new-post-container button {
+        width: 80%;
+        margin-left: 0;
+        margin-top: 5px;
+      }
+
       .actions button {
         padding: 6px 12px;
         margin-bottom: 5px;
         width: 48%;
       }
 
-      #login-container input, #new-post-container input {
-        width: 100%;
-        font-size: 1em;
-      }
-
-      #login-container button, #new-post-container button {
-        width: 100%;
-        font-size: 1em;
-        padding: 8px;
-        margin-top: 5px;
-      }
-
       .comment-input {
         flex-direction: column;
       }
 
-      .comment-input input {
-        margin-bottom: 5px;
+      .comment-input input, .comment-input button {
         width: 100%;
-      }
-
-      .comment-input button {
         margin-left: 0;
-        width: 100%;
-        padding: 8px;
       }
     }
   </style>
@@ -288,7 +296,7 @@
           <button onclick="addComment(${index})">Comment</button>
         </div>
       `;
-      feed.appendChild(div);
+      feed.prepend(div); // new posts appear at the top
     }
 
     // Admin creates post
