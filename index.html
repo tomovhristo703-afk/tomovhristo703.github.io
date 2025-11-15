@@ -35,7 +35,6 @@
       text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* Login and new post inputs */
     #login-container, #new-post-container {
       display: flex;
       flex-direction: column;
@@ -73,7 +72,7 @@
       color: #555;
     }
 
-    /* Posts feed cards */
+    /* Post card */
     .post {
       background: #fffaf0;
       border-radius: 15px;
@@ -83,10 +82,16 @@
       word-wrap: break-word;
     }
 
+    .post .author {
+      font-weight: bold;
+      color: darkred;
+      margin-bottom: 5px;
+    }
+
     .post .date {
       font-size: 0.8em;
       color: #555;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
 
     .post .message {
@@ -97,15 +102,18 @@
 
     .actions {
       display: flex;
-      gap: 15px;
-      margin-bottom: 5px;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 0.95em;
+      color: darkred;
+      margin-bottom: 10px;
     }
 
     .actions button {
       background: transparent;
       border: none;
-      color: darkred;
       cursor: pointer;
+      color: darkred;
       font-weight: bold;
     }
 
@@ -152,7 +160,6 @@
       background: crimson;
     }
 
-    /* Mobile responsiveness */
     @media only screen and (max-width: 600px) {
       .container {
         margin: 10px;
@@ -175,6 +182,7 @@
 
       .actions {
         flex-wrap: wrap;
+        gap: 10px;
       }
     }
   </style>
@@ -217,12 +225,12 @@
       }
     }
 
-    // Load posts.json, newest first
+    // Load posts.json
     fetch('posts.json')
       .then(res => res.json())
       .then(posts => {
         const feed = document.getElementById("feed");
-        posts.reverse();
+        posts.reverse(); // newest first
         posts.forEach((post, index) => addPostToFeed(post.date, post.message, index, feed));
       })
       .catch(() => {
@@ -233,9 +241,12 @@
       const div = document.createElement("div");
       div.className = "post";
       div.innerHTML = `
+        <div class="author">realHristoTomov</div>
         <div class="date">${date}</div>
         <div class="message">${message}</div>
         <div class="actions">
+          <button onclick="addComment(${index})">Comment</button>
+          <button onclick="sharePost(${index})">Share</button>
           <button onclick="likePost(${index})">Like (<span id="likes-${index}">0</span>)</button>
         </div>
         <div class="comments" id="comments-${index}"></div>
@@ -282,6 +293,10 @@
       const commentsDiv = document.getElementById(`comments-${index}`);
       commentsDiv.innerHTML = comments[index].map(c => `<div>${c}</div>`).join('');
       input.value = '';
+    }
+
+    function sharePost(index) {
+      alert("Share link copied! (simulation)");
     }
 
     // PWA
