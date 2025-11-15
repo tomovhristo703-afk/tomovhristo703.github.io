@@ -17,12 +17,13 @@
 
     .container {
       max-width: 700px;
-      margin: 50px auto;
+      margin: 20px auto;
       background: #fffaf0;
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      padding: 40px;
+      padding: 20px;
       border: 4px solid gold;
+      min-height: 100vh;
     }
 
     h1 {
@@ -33,159 +34,129 @@
       text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
 
-    .post {
-      border-bottom: 1px solid #ddd;
-      padding: 20px 0;
+    /* Login and new post inputs */
+    #login-container, #new-post-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #login-container input, #new-post-container input {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    #login-container button, #new-post-container button {
+      padding: 8px 16px;
+      border-radius: 15px;
+      border: none;
+      background: darkred;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
       transition: background 0.3s;
     }
 
-    .post:last-child {
-      border-bottom: none;
+    #login-container button:hover, #new-post-container button:hover {
+      background: crimson;
     }
 
-    .date {
-      color: #555;
+    #current-user {
+      margin-top: 5px;
       font-size: 0.9em;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
+      color: #555;
     }
 
-    .message {
-      font-size: 1.2em;
-      line-height: 1.5em;
-      color: #0b1e3c;
+    /* Posts feed cards */
+    .post {
+      background: #fffaf0;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       word-wrap: break-word;
     }
 
-    .post:hover {
-      background: #fff0f5;
+    .post .date {
+      font-size: 0.8em;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .post .message {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      color: #0b1e3c;
     }
 
     .actions {
-      margin-top: 10px;
+      display: flex;
+      gap: 15px;
+      margin-bottom: 5px;
     }
 
     .actions button {
-      background: darkred;
-      color: white;
+      background: transparent;
       border: none;
-      padding: 5px 12px;
-      margin-right: 10px;
-      border-radius: 5px;
+      color: darkred;
       cursor: pointer;
+      font-weight: bold;
     }
 
     .actions button:hover {
-      background: crimson;
+      text-decoration: underline;
     }
 
     .comments {
       margin-top: 10px;
+      font-size: 0.9em;
     }
 
     .comments div {
       border-top: 1px solid #ddd;
       padding: 5px 0;
-      font-size: 0.95em;
-      color: #222;
-      word-wrap: break-word;
-    }
-
-    #login-container {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    #login-container input {
-      padding: 5px;
-      font-size: 1em;
-      width: 50%;
-      max-width: 250px;
-    }
-
-    #login-container button {
-      padding: 5px 12px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background: darkred;
-      color: white;
-      cursor: pointer;
-      margin-left: 5px;
-    }
-
-    #login-container button:hover {
-      background: crimson;
-    }
-
-    #new-post-container {
-      display: none;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    #new-post-container input {
-      width: 70%;
-      padding: 5px;
-      font-size: 1em;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      max-width: 400px;
-    }
-
-    #new-post-container button {
-      padding: 5px 12px;
-      margin-left: 5px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background: darkred;
-      color: white;
-      cursor: pointer;
-    }
-
-    #new-post-container button:hover {
-      background: crimson;
+      color: #0b1e3c;
     }
 
     .comment-input {
-      margin-top: 10px;
       display: flex;
+      gap: 5px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
 
     .comment-input input {
       flex: 1;
-      padding: 5px;
-      font-size: 1em;
-      border-radius: 5px;
+      padding: 8px;
+      border-radius: 15px;
       border: 1px solid #ccc;
       min-width: 60%;
-      margin-bottom: 5px;
     }
 
     .comment-input button {
-      padding: 5px 10px;
+      padding: 8px 12px;
+      border-radius: 15px;
+      border: none;
       background: darkred;
       color: white;
-      border: none;
-      border-radius: 5px;
       cursor: pointer;
-      margin-left: 5px;
-      margin-bottom: 5px;
-      min-width: 30%;
     }
 
     .comment-input button:hover {
       background: crimson;
     }
 
-    /* Mobile Styles */
+    /* Mobile responsiveness */
     @media only screen and (max-width: 600px) {
       .container {
         margin: 10px;
-        padding: 20px;
-        border-width: 2px;
+        padding: 15px;
+        border-width: 3px;
       }
 
       h1 {
@@ -193,38 +164,16 @@
         margin-bottom: 20px;
       }
 
-      .message {
-        font-size: 1em;
-      }
-
-      #login-container input {
-        width: 80%;
-        max-width: none;
-      }
-
-      #new-post-container input {
-        width: 80%;
-      }
-
-      #login-container button, #new-post-container button {
-        width: 80%;
-        margin-left: 0;
-        margin-top: 5px;
-      }
-
-      .actions button {
-        padding: 6px 12px;
-        margin-bottom: 5px;
-        width: 48%;
-      }
-
-      .comment-input {
-        flex-direction: column;
+      #login-container input, #new-post-container input {
+        width: 95%;
       }
 
       .comment-input input, .comment-input button {
         width: 100%;
-        margin-left: 0;
+      }
+
+      .actions {
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -251,12 +200,11 @@
   </div>
 
   <script>
-    const adminUsername = "realHristoTomov"; // Only this user can post
+    const adminUsername = "realHristoTomov";
     let currentUser = '';
     const likes = [];
     const comments = [];
 
-    // Login
     function login() {
       const usernameInput = document.getElementById('username');
       if(usernameInput.value.trim() !== '') {
@@ -264,19 +212,17 @@
         document.getElementById('current-user').innerText = `Logged in as: ${currentUser}`;
         usernameInput.value = '';
         document.getElementById('new-post-container').style.display =
-          (currentUser === adminUsername) ? 'block' : 'none';
+          (currentUser === adminUsername) ? 'flex' : 'none';
       }
     }
 
-    // Fetch posts.json and show newest first
+    // Load posts.json, newest first
     fetch('posts.json')
       .then(res => res.json())
       .then(posts => {
         const feed = document.getElementById("feed");
-        posts.reverse(); // newest posts first
-        posts.forEach((post, index) => {
-          addPostToFeed(post.date, post.message, index, feed);
-        });
+        posts.reverse();
+        posts.forEach((post, index) => addPostToFeed(post.date, post.message, index, feed));
       })
       .catch(() => {
         document.getElementById("feed").innerHTML = "<p>Could not load posts.</p>";
@@ -297,10 +243,9 @@
           <button onclick="addComment(${index})">Comment</button>
         </div>
       `;
-      feed.prepend(div); // always add new post at top
+      feed.prepend(div);
     }
 
-    // Admin creates post
     function createPost() {
       if(currentUser !== adminUsername) return;
       const input = document.getElementById('new-post-input');
@@ -316,14 +261,12 @@
       input.value = '';
     }
 
-    // Like
     function likePost(index) {
       if(!likes[index]) likes[index] = 0;
       likes[index]++;
       document.getElementById(`likes-${index}`).innerText = likes[index];
     }
 
-    // Comment
     function addComment(index) {
       if(!currentUser) {
         alert('Please login first!');
@@ -340,14 +283,13 @@
       input.value = '';
     }
 
-    // PWA service worker
+    // PWA
     if('serviceWorker' in navigator){
       navigator.serviceWorker.register('sw.js')
         .then(()=>console.log('Service Worker registered'))
         .catch(err=>console.log('Service Worker failed', err));
     }
 
-    // Install prompt
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e)=>{
       e.preventDefault();
@@ -361,7 +303,7 @@
       installBtn.style.color="white";
       installBtn.style.border="none";
       installBtn.style.padding="10px 15px";
-      installBtn.style.borderRadius="10px";
+      installBtn.style.borderRadius="20px";
       installBtn.style.cursor="pointer";
       installBtn.onclick=()=>{
         deferredPrompt.prompt();
