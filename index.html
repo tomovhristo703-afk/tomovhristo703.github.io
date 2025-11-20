@@ -1,377 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>From the Desk of Hristo Tomov</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b1e3c">
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to bottom, #0b1e3c, #ffffff);
-    font-family: 'Playfair Display', serif;
-    color: #222;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>iPhone OS 1</title>
+    <style>
+        /* --- 1. RESET & BODY --- */
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0;
+            background-color: #111;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-  .container {
-    max-width: 700px;
-    margin: 20px auto;
-    background: #fffaf0;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    padding: 20px;
-    border: 4px solid gold;
-    min-height: 100vh;
-  }
+        /* --- 2. PHONE CASING (PC VIEW) --- */
+        #phone-case {
+            width: 360px; height: 720px;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
 
-  h1 {
-    text-align: center;
-    color: darkred;
-    font-size: 3em;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-  }
+        /* On Mobile, remove the casing and fill screen */
+        @media (max-width: 500px) {
+            #phone-case { width: 100%; height: 100%; border: none; border-radius: 0; }
+        }
 
-  #login-container, #new-post-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+        /* --- 3. STATUS BAR --- */
+        .status-bar {
+            height: 20px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+            position: absolute; top: 0; left: 0; width: 100%;
+        }
 
-  #login-container input, #new-post-container input {
-    width: 90%;
-    max-width: 400px;
-    padding: 10px;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
+        /* --- 4. SCREENS --- */
+        .screen {
+            width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0;
+            transition: transform 0.4s ease-in-out;
+        }
 
-  #login-container button, #new-post-container button {
-    padding: 8px 16px;
-    border-radius: 15px;
-    border: none;
-    background: darkred;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
-  }
+        /* Lock Screen */
+        #lock-screen {
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/600px-The_Earth_seen_from_Apollo_17.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-  #login-container button:hover, #new-post-container button:hover {
-    background: crimson;
-    transform: scale(1.05);
-  }
+        /* Home Screen */
+        #home-screen {
+            background-color: black;
+            display: none; /* Hidden initially */
+            z-index: 1;
+            padding-top: 25px;
+        }
 
-  #current-user {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #555;
-  }
+        /* --- 5. LOCK SCREEN ELEMENTS --- */
+        .lock-header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            width: 100%; padding: 20px 0;
+            text-align: center; color: white;
+        }
+        .big-time { font-size: 60px; font-weight: 300; }
+        .date { font-size: 16px; font-weight: 500; }
+        
+        .slider-container {
+            position: absolute; bottom: 40px;
+            width: 85%; height: 60px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/c/ca/IPhone_slide_to_unlock.png') no-repeat center; /* Fallback */
+            background-size: contain;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+        
+        /* Simulating the text because the image might break */
+        .slider-text {
+            position: absolute; width: 100%; text-align: center;
+            color: #aaa; font-size: 20px; animation: shine 2s infinite;
+        }
+        @keyframes shine { 0% {opacity: 0.5;} 50% {opacity: 1;} 100% {opacity: 0.5;} }
 
-  /* Post card */
-  .post {
-    background: #fff;
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    word-wrap: break-word;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, opacity 0.5s;
-    opacity: 0;
-    transform: translateY(-20px);
-  }
+        .slider-knob {
+            width: 50px; height: 50px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 24px; color: #555;
+            cursor: pointer;
+            z-index: 2;
+        }
 
-  .post.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
+        /* --- 6. HOME SCREEN ICONS --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px 5px;
+            padding: 10px;
+        }
+        .app {
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer;
+        }
+        .icon {
+            width: 55px; height: 55px;
+            border-radius: 12px;
+            background: linear-gradient(to bottom, #5ebbd9, #4a90e2); /* Default Blue */
+            margin-bottom: 5px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        /* Glass effect on icon */
+        .icon::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.1));
+            border-top-left-radius: 12px; border-top-right-radius: 12px;
+        }
+        .app-name { color: white; font-size: 11px; font-weight: bold; }
 
-  .post:hover {
-    transform: translateY(-5px) rotate(-0.2deg);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    background: #fff0e0;
-  }
+        /* Specific Icon Colors to mimic the image */
+        .sms .icon { background: linear-gradient(#69e069, #32b532); }
+        .cal .icon { background: white; display: flex; justify-content: center; align-items: center; color: black; font-weight: bold; flex-direction: column; }
+        .cal-month { color: red; font-size: 8px; margin-top: -5px;} .cal-day { font-size: 24px; }
+        .photo .icon { background: linear-gradient(#ccc, #fff); } /* Placeholder for flower */
+        .yt .icon { background: linear-gradient(#5e2e2e, #3a1a1a); } /* Old YT TV icon */
+        
+        /* Dock */
+        .dock {
+            position: absolute; bottom: 0; width: 100%; height: 85px;
+            background: linear-gradient(to bottom, #444, #111);
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            align-items: center; justify-items: center;
+            box-shadow: inset 0 10px 20px rgba(255,255,255,0.2);
+            border-top: 1px solid #666;
+        }
+        
+        /* --- 7. OPEN APP VIEW (Placeholder) --- */
+        #app-view {
+            display: none; background: white; z-index: 20;
+            flex-direction: column;
+        }
+        .app-header { height: 40px; background: #eee; border-bottom: 1px solid #ccc; display: flex; align-items: center; padding: 0 10px; }
+        .back-btn { padding: 5px 10px; border: 1px solid #999; border-radius: 5px; background: white; cursor: pointer; font-size: 12px; }
+        .app-content { flex: 1; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #333; }
 
-  .post .author {
-    font-weight: bold;
-    color: darkred;
-    margin-bottom: 3px;
-    transition: color 0.3s;
-  }
-
-  .post .author:hover {
-    color: crimson;
-  }
-
-  .post .date {
-    font-size: 0.8em;
-    color: #555;
-    margin-bottom: 8px;
-  }
-
-  .post .message {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-    color: #0b1e3c;
-    transition: transform 0.2s;
-  }
-
-  .post .message:hover {
-    transform: scale(1.02);
-  }
-
-  .actions {
-    display: flex;
-    justify-content: space-around;
-    font-weight: bold;
-    font-size: 0.9em;
-    color: darkred;
-    margin-bottom: 10px;
-  }
-
-  .actions button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: darkred;
-    font-weight: bold;
-    transition: color 0.2s, transform 0.1s;
-  }
-
-  .actions button:hover {
-    color: crimson;
-    transform: scale(1.1);
-  }
-
-  .comments {
-    margin-top: 10px;
-    font-size: 0.9em;
-  }
-
-  .comments div {
-    border-top: 1px solid #ddd;
-    padding: 5px 0;
-    color: #0b1e3c;
-    transition: background 0.2s;
-  }
-
-  .comments div:hover {
-    background: #fff0e0;
-  }
-
-  .comment-input {
-    display: flex;
-    gap: 5px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .comment-input input {
-    flex: 1;
-    padding: 8px;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    min-width: 60%;
-  }
-
-  .comment-input button {
-    padding: 8px 12px;
-    border-radius: 15px;
-    border: none;
-    background: darkred;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
-  }
-
-  .comment-input button:hover {
-    background: crimson;
-    transform: scale(1.05);
-  }
-
-  @media only screen and (max-width: 600px) {
-    .container {
-      margin: 10px;
-      padding: 15px;
-      border-width: 3px;
-    }
-
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    #login-container input, #new-post-container input {
-      width: 95%;
-    }
-
-    .comment-input input, .comment-input button {
-      width: 100%;
-    }
-
-    .actions {
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-  }
-</style>
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>From the Desk of Hristo Tomov</h1>
 
-  <div id="login-container">
-    <input type="text" id="username" placeholder="Enter your username">
-    <input type="password" id="password" placeholder="Enter your password">
-    <button onclick="login()">Login</button>
-    <p id="current-user"></p>
-  </div>
+    <div id="phone-case">
+        
+        <div class="status-bar">
+            <div class="signal">.|| AT-AT</div>
+            <div class="status-time" id="status-time">4:20 PM</div>
+            <div class="battery">[|||]</div>
+        </div>
 
-  <div id="new-post-container" style="display:none">
-    <input type="text" id="new-post-input" placeholder="Write a new post">
-    <button onclick="createPost()">Post</button>
-  </div>
+        <div id="lock-screen" class="screen">
+            <div class="lock-header">
+                <div class="big-time" id="big-time">4:20</div>
+                <div class="date" id="date-display">Saturday, August 12</div>
+            </div>
 
-  <div id="feed"></div>
-</div>
+            <div class="slider-container" onclick="unlockPhone()">
+                <div class="slider-text">slide to unlock</div>
+                <div class="slider-knob">➔</div>
+            </div>
+        </div>
 
-<script>
-const adminUsername = "realHristoTomov";
-const adminPassword = "i23c45o67";
-let currentUser = '';
-const likes = [];
-const comments = [];
+        <div id="home-screen" class="screen">
+            <div class="grid">
+                <div class="app sms" onclick="openApp('SMS')"><div class="icon"></div><span class="app-name">Text</span></div>
+                <div class="app cal" onclick="openApp('Calendar')">
+                    <div class="icon">
+                        <span class="cal-month">TUES</span><span class="cal-day">9</span>
+                    </div>
+                    <span class="app-name">Calendar</span>
+                </div>
+                <div class="app photo" onclick="openApp('Photos')"><div class="icon"></div><span class="app-name">Photos</span></div>
+                <div class="app cam" onclick="openApp('Camera')"><div class="icon"></div><span class="app-name">Camera</span></div>
 
-function login() {
-  const usernameInput = document.getElementById('username').value.trim();
-  const passwordInput = document.getElementById('password').value.trim();
-  if(usernameInput === '' || passwordInput === '') {
-    alert('Please enter both username and password.');
-    return;
-  }
+                <div class="app yt" onclick="openApp('YouTube')"><div class="icon"></div><span class="app-name">YouTube</span></div>
+                <div class="app stock" onclick="openApp('Stocks')"><div class="icon"></div><span class="app-name">Stocks</span></div>
+                <div class="app maps" onclick="openApp('Maps')"><div class="icon"></div><span class="app-name">Maps</span></div>
+                <div class="app weather" onclick="openApp('Weather')"><div class="icon"></div><span class="app-name">Weather</span></div>
+                
+                <div class="app clock" onclick="openApp('Clock')"><div class="icon"></div><span class="app-name">Clock</span></div>
+                <div class="app calc" onclick="openApp('Calc')"><div class="icon"></div><span class="app-name">Calculator</span></div>
+                <div class="app notes" onclick="openApp('Notes')"><div class="icon"></div><span class="app-name">Notes</span></div>
+                <div class="app settings" onclick="openApp('Settings')"><div class="icon"></div><span class="app-name">Settings</span></div>
+            </div>
 
-  if(usernameInput === adminUsername && passwordInput === adminPassword) {
-    currentUser = adminUsername;
-    document.getElementById('current-user').innerText = `Logged in as: ${currentUser} (Admin)`;
-    document.getElementById('new-post-container').style.display = 'flex';
-  } else {
-    currentUser = usernameInput;
-    document.getElementById('current-user').innerText = `Logged in as: ${currentUser}`;
-    document.getElementById('new-post-container').style.display = 'none';
-  }
+            <div class="dock">
+                <div class="app phone" onclick="openApp('Phone')"><div class="icon" style="background: linear-gradient(#32b532, #1e6e1e);"></div><span class="app-name">Phone</span></div>
+                <div class="app mail" onclick="openApp('Mail')"><div class="icon" style="background: linear-gradient(#5ebbd9, #3a7ca0);"></div><span class="app-name">Mail</span></div>
+                <div class="app safari" onclick="openApp('Safari')"><div class="icon" style="background: linear-gradient(#4a90e2, #285a8e);"></div><span class="app-name">Web</span></div>
+                <div class="app ipod" onclick="openApp('iPod')"><div class="icon" style="background: linear-gradient(#ff9500, #d67e00);"></div><span class="app-name">iPod</span></div>
+            </div>
+        </div>
 
-  document.getElementById('username').value = '';
-  document.getElementById('password').value = '';
-}
+        <div id="app-view" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeApp()">Menu</button>
+            </div>
+            <div class="app-content" id="app-content-text">
+                Application Loaded
+            </div>
+        </div>
 
-// Helper: convert date string to "time ago"
-function timeAgo(dateStr) {
-  const now = new Date();
-  const date = new Date(dateStr);
-  const diff = Math.floor((now - date) / 1000);
-  if(diff < 60) return `${diff} sec ago`;
-  if(diff < 3600) return `${Math.floor(diff/60)} min ago`;
-  if(diff < 86400) return `${Math.floor(diff/3600)} hr ago`;
-  return `${Math.floor(diff/86400)} day${Math.floor(diff/86400) > 1 ? 's' : ''} ago`;
-}
-
-// Load posts.json
-fetch('posts.json')
-  .then(res => res.json())
-  .then(posts => {
-    const feed = document.getElementById("feed");
-    posts.reverse();
-    posts.forEach((post, index) => addPostToFeed(post.date, post.message, index, feed));
-  })
-  .catch(() => {
-    document.getElementById("feed").innerHTML = "<p>Could not load posts.</p>";
-  });
-
-function addPostToFeed(date, message, index, feed) {
-  const div = document.createElement("div");
-  div.className = "post";
-  div.innerHTML = `
-    <div class="author">${adminUsername}</div>
-    <div class="date" id="date-${index}">${date}</div>
-    <div class="message">${message}</div>
-    <div class="actions">
-      <button onclick="addComment(${index})">State</button>
-      <button onclick="sharePost(${index})">Restate</button>
-      <button onclick="likePost(${index})">Markup (<span id="likes-${index}">0</span>)</button>
     </div>
-    <div class="comments" id="comments-${index}"></div>
-    <div class="comment-input">
-      <input type="text" id="comment-input-${index}" placeholder="Add a comment">
-      <button onclick="addComment(${index})">Comment</button>
-    </div>
-  `;
-  feed.prepend(div);
 
-  // Slide-in animation
-  setTimeout(() => div.classList.add('show'), 50);
+    <script>
+        // --- Logic ---
 
-  // Update timestamp every 30 seconds
-  setInterval(() => {
-    const el = document.getElementById(`date-${index}`);
-    if(el) el.innerText = timeAgo(date);
-  }, 30000);
-}
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            
+            const timeString = hours + ':' + minutes;
+            
+            document.getElementById('big-time').innerText = timeString;
+            document.getElementById('status-time').innerText = timeString + ' ' + ampm;
 
-function createPost() {
-  if(currentUser !== adminUsername) return;
-  const input = document.getElementById('new-post-input');
-  const text = input.value.trim();
-  if(text === '') return;
+            // Date
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById('date-display').innerText = now.toLocaleDateString('en-US', options);
+        }
 
-  const feed = document.getElementById('feed');
-  const index = feed.children.length;
-  const today = new Date();
-  const dateStr = today.toISOString();
-  addPostToFeed(dateStr, text, index, feed);
-  input.value = '';
-}
+        setInterval(updateTime, 1000);
+        updateTime();
 
-function likePost(index) {
-  if(!likes[index]) likes[index] = 0;
-  likes[index]++;
-  document.getElementById(`likes-${index}`).innerText = likes[index];
-}
+        function unlockPhone() {
+            document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+            document.getElementById('home-screen').style.display = 'block';
+        }
 
-function addComment(index) {
-  if(!currentUser) {
-    alert('Please login first!');
-    return;
-  }
-  const input = document.getElementById(`comment-input-${index}`);
-  const text = input.value.trim();
-  if(text === '') return;
-  if(!comments[index]) comments[index] = [];
-  comments[index].push(`${currentUser}: ${text}`);
+        function openApp(appName) {
+            const appScreen = document.getElementById('app-view');
+            const content = document.getElementById('app-content-text');
+            
+            content.innerText = "Welcome to " + appName;
+            
+            // Simulate functionality based on app name
+            if(appName === 'Clock') {
+                content.innerText = "Current Time: " + new Date().toLocaleTimeString();
+            }
+            
+            appScreen.style.display = 'flex';
+        }
 
-  const commentsDiv = document.getElementById(`comments-${index}`);
-  commentsDiv.innerHTML = comments[index].map(c => `<div>${c}</div>`).join('');
-  input.value = '';
-}
-
-function sharePost(index) {
-  alert("Share link copied! (simulation)");
-}
-
-// PWA
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js')
-    .then(()=>console.log('Service Worker registered'))
-    .catch(err=>console.log('Service Worker failed', err));
-}
-
-// Enter key shortcuts
-document.getElementById('password').addEventListener('keypress', e => { if(e.key === 'Enter') login(); });
-document.getElementById('new-post-input').addEventListener('keypress', e => { if(e.key === 'Enter') createPost(); });
-</script>
+        function closeApp() {
+            document.getElementById('app-view').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
