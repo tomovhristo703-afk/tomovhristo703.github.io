@@ -3,238 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>iPhone OS 1</title>
+    <title>iPhone OS 1 (2G Realism)</title>
     <style>
-        /* --- 1. RESET & BODY --- */
+        /* --- 1. RESET & GLOBAL --- */
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
-            background-color: #111;
+            background-color: #222; /* Dark background for PC view */
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
         }
 
-        /* --- 2. PHONE CASING (PC VIEW) --- */
-        #phone-case {
-            width: 360px; height: 720px;
-            background: #000;
-            border: 2px solid #333;
-            border-radius: 40px;
+        /* --- 2. THE PHONE CHASSIS (PC View) --- */
+        #phone-chassis {
+            width: 380px; height: 780px;
+            background: #000; /* The black surrounding the screen */
+            border-radius: 50px;
+            border: 4px solid #888; /* Aluminum bezel edge hint */
+            box-shadow: inset 0 0 10px #000, 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
+            padding: 80px 15px 100px 15px; /* Padding for speaker(top) and home button(bottom) */
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Ear speaker slot */
+        #phone-chassis::before {
+            content: ''; position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+            width: 70px; height: 6px; background: #333; border-radius: 3px; border: 1px solid #111;
+        }
+
+        /* The Screen Area */
+        #screen-container {
+            width: 320px; height: 480px; /* Original iPhone resolution */
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            background: black;
+            border: 2px solid #111; /* Slight inner bezel */
         }
 
-        /* On Mobile, remove the casing and fill screen */
+        /* THE HOME BUTTON */
+        #home-button {
+            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 60px;
+            background: radial-gradient(circle at center, #111 0%, #333 80%, #555 100%);
+            border-radius: 50%;
+            border: 2px solid #000;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+        /* The rounded square inside the home button */
+        #home-button::after {
+            content: ''; width: 22px; height: 22px;
+            border: 2px solid #888; border-radius: 5px;
+        }
+        #home-button:active { background: #222; /* Press effect */ }
+
+
+        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 500px) {
-            #phone-case { width: 100%; height: 100%; border: none; border-radius: 0; }
+            body { background: black; }
+            #phone-chassis {
+                width: 100%; height: 100%; border: none; border-radius: 0; padding: 0; box-shadow: none;
+            }
+            #phone-chassis::before { display: none; } /* Hide speaker */
+            #home-button { display: none; } /* Hide physical button on mobile phones */
+            #screen-container { width: 100%; height: 100vh; border: none; }
         }
 
         /* --- 3. STATUS BAR --- */
         .status-bar {
-            height: 20px;
-            background: rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 10;
-            position: absolute; top: 0; left: 0; width: 100%;
+            height: 20px; background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5px; color: white; font-size: 11px; font-weight: bold;
+            position: absolute; top: 0; left: 0; width: 100%; z-index: 100;
         }
+        .status-right { display: flex; gap: 5px; }
 
         /* --- 4. SCREENS --- */
         .screen {
-            width: 100%; height: 100%;
-            position: absolute; top: 0; left: 0;
-            transition: transform 0.4s ease-in-out;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: #000;
         }
 
-        /* Lock Screen */
+        /* --- LOCK SCREEN --- */
         #lock-screen {
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/600px-The_Earth_seen_from_Apollo_17.jpg') no-repeat center center;
-            background-size: cover;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: url('https://www.pixelstalk.net/wp-content/uploads/2016/10/iPhone-Wallpaper-Earth.jpg') no-repeat center center;
+            background-size: cover; z-index: 50;
+            display: flex; flex-direction: column; align-items: center;
+            color: white;
         }
+        .lock-time-container {
+            margin-top: 30px; text-align: center;
+            text-shadow: 0px 2px 5px rgba(0,0,0,0.6);
+        }
+        .big-time { font-size: 85px; font-weight: 100; line-height: 1; font-family: Helvetica, sans-serif; }
+        .date { font-size: 18px; margin-top: 5px; font-weight: 300;}
 
-        /* Home Screen */
-        #home-screen {
-            background-color: black;
-            display: none; /* Hidden initially */
-            z-index: 1;
-            padding-top: 25px;
+        .slider-bar {
+            position: absolute; bottom: 30px; width: 90%; height: 55px;
+            background: rgba(0,0,0,0.5); border-radius: 30px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(0,0,0,0.8);
+            overflow: hidden;
+            display: flex; align-items: center; padding: 3px;
         }
-
-        /* --- 5. LOCK SCREEN ELEMENTS --- */
-        .lock-header {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
-            width: 100%; padding: 20px 0;
-            text-align: center; color: white;
-        }
-        .big-time { font-size: 60px; font-weight: 300; }
-        .date { font-size: 16px; font-weight: 500; }
-        
-        .slider-container {
-            position: absolute; bottom: 40px;
-            width: 85%; height: 60px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/c/ca/IPhone_slide_to_unlock.png') no-repeat center; /* Fallback */
-            background-size: contain;
-            background-color: rgba(0,0,0,0.5);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            padding: 5px;
-        }
-        
-        /* Simulating the text because the image might break */
         .slider-text {
             position: absolute; width: 100%; text-align: center;
-            color: #aaa; font-size: 20px; animation: shine 2s infinite;
+            color: #888; font-size: 22px; font-weight: 300;
+            /* The shimmering text effect */
+            background: linear-gradient(to right, #666 0%, #fff 50%, #666 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 2.5s infinite linear;
         }
-        @keyframes shine { 0% {opacity: 0.5;} 50% {opacity: 1;} 100% {opacity: 0.5;} }
+        @keyframes shimmer { from { background-position: -200px; } to { background-position: 200px; } }
 
         .slider-knob {
-            width: 50px; height: 50px;
-            background: #ddd;
-            border-radius: 50%;
+            width: 48px; height: 48px; background: linear-gradient(to bottom, #eee, #ccc);
+            border-radius: 50%; border: 2px solid rgba(0,0,0,0.2);
             display: flex; justify-content: center; align-items: center;
-            font-size: 24px; color: #555;
-            cursor: pointer;
-            z-index: 2;
+            font-size: 28px; color: #444; cursor: grab; z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
 
-        /* --- 6. HOME SCREEN ICONS --- */
+        /* --- HOME SCREEN --- */
+        #home-screen { display: none; z-index: 40; padding-top: 20px; }
+
         .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px 5px;
-            padding: 10px;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 15px 5px; padding: 15px; justify-items: center;
         }
-        .app {
-            display: flex; flex-direction: column; align-items: center;
-            cursor: pointer;
-        }
+
+        /* --- THE ICONS (The hard part) --- */
+        .app { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; }
+        
+        /* The base icon shape and glossy overlay */
         .icon {
-            width: 55px; height: 55px;
-            border-radius: 12px;
-            background: linear-gradient(to bottom, #5ebbd9, #4a90e2); /* Default Blue */
-            margin-bottom: 5px;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            width: 58px; height: 58px;
+            border-radius: 11px; /* Specific iOS 1 radius */
+            position: relative; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            background: #555; /* Fallback */
         }
-        /* Glass effect on icon */
+        /* The bright top gloss */
         .icon::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.1));
-            border-top-left-radius: 12px; border-top-right-radius: 12px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            border-top-left-radius: 11px; border-top-right-radius: 11px;
         }
-        .app-name { color: white; font-size: 11px; font-weight: bold; }
+        .app-name {
+            color: white; font-size: 11px; margin-top: 6px; font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
 
-        /* Specific Icon Colors to mimic the image */
-        .sms .icon { background: linear-gradient(#69e069, #32b532); }
-        .cal .icon { background: white; display: flex; justify-content: center; align-items: center; color: black; font-weight: bold; flex-direction: column; }
-        .cal-month { color: red; font-size: 8px; margin-top: -5px;} .cal-day { font-size: 24px; }
-        .photo .icon { background: linear-gradient(#ccc, #fff); } /* Placeholder for flower */
-        .yt .icon { background: linear-gradient(#5e2e2e, #3a1a1a); } /* Old YT TV icon */
+        /* Custom Icon Styles using CSS Gradients to mimic images */
+        .sms .icon { background: linear-gradient(to bottom, #76e476, #33b833); }
+        .sms .icon::before { content: '💬'; position:absolute; bottom:5px; left:12px; font-size:30px; color:white; text-shadow: 0 -1px rgba(0,0,0,0.3);}
+
+        .cal .icon { background: white; display: flex; flex-direction: column; align-items: center; }
+        .cal-header { color: red; font-size: 9px; font-weight: bold; margin-top: 4px; text-transform: uppercase;}
+        .cal-number { font-size: 32px; font-weight: bold; color: black; line-height: 1; }
+
+        /* Using a CSS trick for the sunflower photo */
+        .photo .icon { 
+            background: radial-gradient(circle at center, yellow, orange);
+            display: flex; justify-content: center; align-items: center;
+         }
+        .photo .icon::before { content: '🌻'; font-size: 40px; } /* Emoji placeholder, replace with real image if possible */
+
+        .camera .icon { background: linear-gradient(to bottom, #ccc, #999); position: relative;}
+        .camera .icon::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: #333; border-radius: 50%; border: 3px solid #ddd; box-shadow: inset 0 0 10px black;}
+
+        .yt .icon { background: linear-gradient(to bottom, #7c3f3f, #4a1a1a); display: flex; justify-content: center; align-items: center;}
+        .yt .icon::before { content: '📺'; font-size: 35px; filter: grayscale(30%); }
+
+        .stocks .icon { background: linear-gradient(#1a3a5a, #0a1a2a); position: relative; }
+        .stocks .icon::before { content: ''; position: absolute; bottom: 5px; left: 5px; width: 80%; height: 40%; border-top: 2px solid cyan; border-right: 2px solid cyan; transform: skewY(-10deg);}
+
+        .maps .icon { background: #f0e0c0; position: relative; overflow: hidden;}
+        /* A crude CSS map pin */
+        .maps .icon::before { content: ''; position: absolute; top: 15px; left: 20px; width: 15px; height: 15px; background: red; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 1px solid darkred; z-index: 2;}
+
+        .weather .icon { background: linear-gradient(to bottom, #4a90e2, #87ceeb); display: flex; justify-content: center; align-items: center; }
+        .weather .icon::before { content: '☀'; color: yellow; font-size: 40px; text-shadow: 0 0 10px orange;}
+
+        .clock .icon { background: black; display: flex; justify-content: center; align-items: center; position: relative;}
+        .clock .icon::before { content: ''; width: 48px; height: 48px; background: white; border-radius: 50%; }
+        /* Add clock hands if feeling ambitious later */
         
-        /* Dock */
+        .calc .icon { background: linear-gradient(to bottom, #d98c4a, #b36b2a); display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 30px;}
+        .calc .icon::before { content: '+ -'; position: absolute; top: 5px; font-size: 18px;} .calc .icon::after { content: '× ÷'; position: absolute; bottom: 5px; font-size: 18px; background: none; border: none; height: auto;}
+
+        .notes .icon { background: linear-gradient(to bottom, #f8f8d8, #e8e8b8); border-top: 5px solid #c8a878; }
+        .notes .icon::before { content: ''; position: absolute; left: 10px; top: 10px; width: 2px; height: 35px; background: #c8a878; box-shadow: 5px 0 #c8a878, 10px 0 #c8a878;}
+
+        /* CSS Gears for settings */
+        .settings .icon { background: linear-gradient(to bottom, #888, #555); position: relative; display: flex; justify-content: center; align-items: center; }
+        .settings .icon::before { content: '⚙'; font-size: 45px; color: #ccc; text-shadow: 0 -1px 1px black;}
+
+        /* --- THE DOCK --- */
         .dock {
-            position: absolute; bottom: 0; width: 100%; height: 85px;
-            background: linear-gradient(to bottom, #444, #111);
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            align-items: center; justify-items: center;
-            box-shadow: inset 0 10px 20px rgba(255,255,255,0.2);
-            border-top: 1px solid #666;
+            position: absolute; bottom: 0; width: 100%; height: 90px;
+            /* The famous reflective glass shelf */
+            background: linear-gradient(to bottom, rgba(150,150,150,0.4) 0%, rgba(0,0,0,0.8) 100%);
+            border-top: 1px solid rgba(255,255,255,0.3);
+            display: flex; justify-content: space-around; align-items: flex-start;
+            padding-top: 12px;
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.3);
         }
-        
-        /* --- 7. OPEN APP VIEW (Placeholder) --- */
+
+        /* Specific Dock Icon Colors */
+        .phone .icon { background: linear-gradient(to bottom, #32c732, #1e6e1e); }
+        .phone .icon::before { content: '📞'; font-size: 35px; color: white; position: absolute; top: 10px; left: 12px;}
+
+        .mail .icon { background: linear-gradient(to bottom, #62c2e2, #3a7ca0); }
+        .mail .icon::before { content: '✉'; font-size: 35px; color: white; position: absolute; top: 10px; left: 12px;}
+
+        .safari .icon { background: linear-gradient(to bottom, #4a90e2, #285a8e); }
+        /* Compass needle */
+        .safari .icon::before { content: ''; position: absolute; top:14px; left:14px; width:30px; height:30px; border-radius:50%; background: white; border: 2px solid #ccc;}
+        .safari .icon::after { content: '▲'; color: red; position: absolute; top: 16px; left: 22px; font-size: 20px; background: none; border: none; transform: rotate(45deg);}
+
+        .ipod .icon { background: linear-gradient(to bottom, #ffaf1a, #d67e00); }
+        .ipod .icon::before { content: '🎵'; font-size: 35px; color: white; position: absolute; top: 10px; left: 14px;}
+
+        /* --- DOCK REFLECTION EFFECT --- */
+        /* This creates the reflection below the dock icons */
+        .dock .app::after {
+            content: '';
+            position: absolute;
+            top: 100%; /* Position directly below */
+            left: 0;
+            width: 58px; height: 58px;
+            background: inherit; /* Copy the icon's background */
+            border-radius: 11px;
+            /* Flip it upside down */
+            transform: scaleY(-1);
+            /* Fade it out quickly */
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 60%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 60%);
+            pointer-events: none; /* Don't block clicks below */
+            z-index: -1;
+            margin-top: 2px;
+        }
+
+
+        /* --- APP VIEW (Placeholder) --- */
         #app-view {
-            display: none; background: white; z-index: 20;
+            display: none; background: #fff; z-index: 60;
             flex-direction: column;
         }
-        .app-header { height: 40px; background: #eee; border-bottom: 1px solid #ccc; display: flex; align-items: center; padding: 0 10px; }
-        .back-btn { padding: 5px 10px; border: 1px solid #999; border-radius: 5px; background: white; cursor: pointer; font-size: 12px; }
-        .app-content { flex: 1; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #333; }
+        .app-header { height: 44px; background: linear-gradient(to bottom, #cdcdcd, #a0a0a0); border-bottom: 1px solid #555; display: flex; align-items: center; padding: 0 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .app-title { font-weight: bold; font-size: 18px; color: #333; margin: 0 auto; text-shadow: 0 1px white;}
+        .app-content { flex: 1; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #555; background: #e0e0e0;}
 
     </style>
 </head>
 <body>
 
-    <div id="phone-case">
+    <div id="phone-chassis">
         
-        <div class="status-bar">
-            <div class="signal">.|| AT-AT</div>
-            <div class="status-time" id="status-time">4:20 PM</div>
-            <div class="battery">[|||]</div>
-        </div>
-
-        <div id="lock-screen" class="screen">
-            <div class="lock-header">
-                <div class="big-time" id="big-time">4:20</div>
-                <div class="date" id="date-display">Saturday, August 12</div>
-            </div>
-
-            <div class="slider-container" onclick="unlockPhone()">
-                <div class="slider-text">slide to unlock</div>
-                <div class="slider-knob">➔</div>
-            </div>
-        </div>
-
-        <div id="home-screen" class="screen">
-            <div class="grid">
-                <div class="app sms" onclick="openApp('SMS')"><div class="icon"></div><span class="app-name">Text</span></div>
-                <div class="app cal" onclick="openApp('Calendar')">
-                    <div class="icon">
-                        <span class="cal-month">TUES</span><span class="cal-day">9</span>
-                    </div>
-                    <span class="app-name">Calendar</span>
+        <div id="screen-container">
+            <div class="status-bar">
+                <div class="signal">..|| AT&T</div>
+                <div class="status-time" id="status-time">4:20 PM</div>
+                <div class="status-right">
+                   <span>Bluetooth</span> <span>[|||]</span>
                 </div>
-                <div class="app photo" onclick="openApp('Photos')"><div class="icon"></div><span class="app-name">Photos</span></div>
-                <div class="app cam" onclick="openApp('Camera')"><div class="icon"></div><span class="app-name">Camera</span></div>
-
-                <div class="app yt" onclick="openApp('YouTube')"><div class="icon"></div><span class="app-name">YouTube</span></div>
-                <div class="app stock" onclick="openApp('Stocks')"><div class="icon"></div><span class="app-name">Stocks</span></div>
-                <div class="app maps" onclick="openApp('Maps')"><div class="icon"></div><span class="app-name">Maps</span></div>
-                <div class="app weather" onclick="openApp('Weather')"><div class="icon"></div><span class="app-name">Weather</span></div>
-                
-                <div class="app clock" onclick="openApp('Clock')"><div class="icon"></div><span class="app-name">Clock</span></div>
-                <div class="app calc" onclick="openApp('Calc')"><div class="icon"></div><span class="app-name">Calculator</span></div>
-                <div class="app notes" onclick="openApp('Notes')"><div class="icon"></div><span class="app-name">Notes</span></div>
-                <div class="app settings" onclick="openApp('Settings')"><div class="icon"></div><span class="app-name">Settings</span></div>
             </div>
 
-            <div class="dock">
-                <div class="app phone" onclick="openApp('Phone')"><div class="icon" style="background: linear-gradient(#32b532, #1e6e1e);"></div><span class="app-name">Phone</span></div>
-                <div class="app mail" onclick="openApp('Mail')"><div class="icon" style="background: linear-gradient(#5ebbd9, #3a7ca0);"></div><span class="app-name">Mail</span></div>
-                <div class="app safari" onclick="openApp('Safari')"><div class="icon" style="background: linear-gradient(#4a90e2, #285a8e);"></div><span class="app-name">Web</span></div>
-                <div class="app ipod" onclick="openApp('iPod')"><div class="icon" style="background: linear-gradient(#ff9500, #d67e00);"></div><span class="app-name">iPod</span></div>
+            <div id="lock-screen" class="screen">
+                <div class="lock-time-container">
+                    <div class="big-time" id="big-time">4:20</div>
+                    <div class="date" id="date-display">Saturday, August 12</div>
+                </div>
+
+                <div class="slider-bar" id="unlock-slider">
+                    <div class="slider-text">slide to unlock</div>
+                    <div class="slider-knob">➔</div>
+                </div>
             </div>
-        </div>
 
-        <div id="app-view" class="screen">
-            <div class="app-header">
-                <button class="back-btn" onclick="closeApp()">Menu</button>
+            <div id="home-screen" class="screen">
+                <div class="grid">
+                    <div class="app sms" onclick="launchApp('Text')"><div class="icon"></div><span class="app-name">Text</span></div>
+                    <div class="app cal" onclick="launchApp('Calendar')">
+                        <div class="icon">
+                            <span class="cal-header">TUES</span>
+                            <span class="cal-number">9</span>
+                        </div>
+                        <span class="app-name">Calendar</span>
+                    </div>
+                    <div class="app photo" onclick="launchApp('Photos')"><div class="icon"></div><span class="app-name">Photos</span></div>
+                    <div class="app camera" onclick="launchApp('Camera')"><div class="icon"></div><span class="app-name">Camera</span></div>
+
+                    <div class="app yt" onclick="launchApp('YouTube')"><div class="icon"></div><span class="app-name">YouTube</span></div>
+                    <div class="app stocks" onclick="launchApp('Stocks')"><div class="icon"></div><span class="app-name">Stocks</span></div>
+                    <div class="app maps" onclick="launchApp('Maps')"><div class="icon"></div><span class="app-name">Maps</span></div>
+                    <div class="app weather" onclick="launchApp('Weather')"><div class="icon"></div><span class="app-name">Weather</span></div>
+                    
+                    <div class="app clock" onclick="launchApp('Clock')"><div class="icon"></div><span class="app-name">Clock</span></div>
+                    <div class="app calc" onclick="launchApp('Calculator')"><div class="icon"></div><span class="app-name">Calculator</span></div>
+                    <div class="app notes" onclick="launchApp('Notes')"><div class="icon"></div><span class="app-name">Notes</span></div>
+                    <div class="app settings" onclick="launchApp('Settings')"><div class="icon"></div><span class="app-name">Settings</span></div>
+                </div>
+
+                <div class="dock">
+                    <div class="app phone" onclick="launchApp('Phone')"><div class="icon"></div><span class="app-name">Phone</span></div>
+                    <div class="app mail" onclick="launchApp('Mail')"><div class="icon"></div><span class="app-name">Mail</span></div>
+                    <div class="app safari" onclick="launchApp('Safari')"><div class="icon"></div><span class="app-name">Safari</span></div>
+                    <div class="app ipod" onclick="launchApp('iPod')"><div class="icon"></div><span class="app-name">iPod</span></div>
+                </div>
             </div>
-            <div class="app-content" id="app-content-text">
-                Application Loaded
+
+            <div id="app-view" class="screen">
+                <div class="app-header">
+                    <div class="app-title" id="opened-app-title">App Name</div>
+                </div>
+                <div class="app-content" id="opened-app-content">
+                    Content
+                </div>
             </div>
-        </div>
+        </div> <div id="home-button" onclick="pressHomeButton()"></div>
 
-    </div>
+    </div> <script>
+        // --- State Tracking ---
+        let currentState = 'lock'; // 'lock', 'home', 'app'
 
-    <script>
-        // --- Logic ---
-
-        function updateTime() {
+        // --- Time and Date Logic ---
+        function updateClock() {
             const now = new Date();
             let hours = now.getHours();
             let minutes = now.getMinutes();
@@ -242,42 +343,46 @@
             hours = hours % 12;
             hours = hours ? hours : 12; 
             minutes = minutes < 10 ? '0'+minutes : minutes;
-            
             const timeString = hours + ':' + minutes;
             
             document.getElementById('big-time').innerText = timeString;
             document.getElementById('status-time').innerText = timeString + ' ' + ampm;
 
-            // Date
             const options = { weekday: 'long', month: 'long', day: 'numeric' };
             document.getElementById('date-display').innerText = now.toLocaleDateString('en-US', options);
         }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        setInterval(updateTime, 1000);
-        updateTime();
+        // --- Unlock Logic ---
+        const slider = document.getElementById('unlock-slider');
+        slider.addEventListener('click', function() {
+            unlockPhone();
+        });
 
         function unlockPhone() {
             document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
             document.getElementById('home-screen').style.display = 'block';
+            currentState = 'home';
         }
 
-        function openApp(appName) {
-            const appScreen = document.getElementById('app-view');
-            const content = document.getElementById('app-content-text');
+        // --- App Launching Logic ---
+        function launchApp(appName) {
+            const appView = document.getElementById('app-view');
+            const appTitle = document.getElementById('opened-app-title');
+            const appContent = document.getElementById('opened-app-content');
             
-            content.innerText = "Welcome to " + appName;
+            appTitle.innerText = appName;
+            appContent.innerText = appName + " is running.";
             
-            // Simulate functionality based on app name
-            if(appName === 'Clock') {
-                content.innerText = "Current Time: " + new Date().toLocaleTimeString();
-            }
-            
-            appScreen.style.display = 'flex';
+            // Basic simulation
+            if(appName === 'Calculator') appContent.innerText = "0";
+            if(appName === 'Notes') appContent.innerText = "Buy milk\nCall Steve";
+
+            appView.style.display = 'flex';
+            currentState = 'app';
         }
 
-        function closeApp() {
-            document.getElementById('app-view').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+        // --- Home Button Logic ---
+        function pressHomeButton() {
+            console.log('Home button pressed. Current state:', currentState);
